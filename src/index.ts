@@ -1,5 +1,5 @@
-import { readFileSync } from "fs";
-import { resolve, normalize } from "path";
+import { readFileSync, writeFileSync } from "fs";
+import { resolve, normalize, join } from "path";
 
 import { Plugin } from "rollup";
 import { PluginOptions, ManifestOptions } from "./index.d";
@@ -18,11 +18,12 @@ export default function manifestJson(opts: PluginOptions): Plugin  {
 
           Object.assign(manifestData, manifest);
 
-          this.emitFile({
-              type: "asset",
-              source: minify ? JSON.stringify(manifestData) : JSON.stringify(manifestData, null, 2),
-              fileName: output ? normalize(`${output}/manifest.json`) : 'manifest.json',
-          });
+          writeFileSync(output ? join(output, 'manifest.json') : 'manifest.json', minify ? JSON.stringify(manifestData) : JSON.stringify(manifestData, null, 2));
+        //   this.emitFile({
+        //       type: "asset",
+        //       source: minify ? JSON.stringify(manifestData) : JSON.stringify(manifestData, null, 2),
+        //       fileName: output ? normalize(`${output}/manifest.json`) : 'manifest.json',
+        //   });
         }
     }
 }
